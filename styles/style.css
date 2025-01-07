@@ -1,0 +1,318 @@
+/* Base CSS */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.home {
+    width: 100%;
+    height: 100vh;
+    background-color: #F0F0F0;
+    background-image: url('/images/pixelcut-export.jpeg');
+    background-position: center;
+    background-size: cover;
+}
+
+.home .nav {
+    height: 70px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+}
+
+.home .nav .menu {
+    margin-right: 20px;
+}
+
+.home .nav .menu ul {
+    display: flex;
+    list-style-type: none;
+    text-align: center;
+}
+
+.home .nav .menu ul li {
+    padding: 10px 20px;
+    margin: 0px 10px;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.home .nav .menu ul li:hover {
+    background-color: #3ca972;
+}
+
+.home .nav .logo {
+    width: 120px;
+    height: 60px;
+    margin-left: 50px;
+    position: relative;
+}
+
+.edit-btn {
+    top: 5px;
+    right: 5px;
+    position: absolute;
+}
+
+.add-choice {
+    margin: 20px 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+#newChoice {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 200px;
+}
+
+#addChoiceBtn {
+    padding: 10px 15px;
+    background-color: #3ca972;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.home .nav .logo img {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+
+.home .main {
+    width: 700px;
+    padding: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 20px;
+    border: 1px solid #fff;
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home .main .box {
+    width: 400px;
+    background-color: #fff;
+    border-radius: 20px;
+    display: grid;
+    justify-content: center;
+}
+
+.home .main .box h2 {
+    text-align: center;
+}
+
+.home .main .box .logo2 {
+    width: 130px;
+    height: 70px;
+    margin: auto;
+    margin-top: 20px;
+    position: relative;
+}
+
+.home .main .box .logo2 img {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+
+.home .main .box .choise .one {
+    background-color: #3ca972;
+    font-size: 20px;
+    text-align: center;
+    padding: 10px 20px;
+    margin: 10px 0px 20px;
+    cursor: pointer;
+}
+
+.infobox {
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 10px 0px 20px;
+    text-align: center;
+}
+
+.infobox img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.home .main .box .next {
+    background-color: white;
+    border: 1px solid #0dcd6d;
+    color: #0dcd6d;
+    font-size: 20px;
+    text-align: center;
+    padding: 10px 10px;
+    border-radius: 10px;
+    width: max-content;
+    margin: auto;
+    margin-bottom: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-weight: 500;
+}
+
+.home .main .box .next p {
+    background-color: #0dcd6d;
+    color: #fff;
+    border-radius: 10px;
+    margin-left: 10px;
+    font-size: 20px;
+    font-weight: 900;
+    padding: 5px 10px;
+}
+
+.line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+    border: 1px solid #000;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+    border: 1px solid #0dcd6d;
+    padding: 5px;
+    border-radius: 7px;
+    font-size: 20px;
+    font-weight: 600;
+    background-color: #F0F0F0;
+}
+
+.custom-file-label {
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+span#fileName {
+    font-size: 12px;
+}
+
+/* For small screens (phones, up to 600px wide) */
+@media screen and (max-width: 600px) {
+    .home .nav .logo {
+        margin-left: 5px;
+        width: 60px;
+    }
+
+    .home .main .box .choise .one {
+        font-size: 14px;
+        width: 100px;
+        margin: 7px 0px;
+        padding: 10px 0px;
+    }
+    #newChoice {
+        width: 80px;
+    }
+    .add-choice {
+        margin: 5px 0;
+    }
+    div#choises, div#dataList {
+        width: 100%;
+        justify-content: center;
+        display: grid;
+    }
+
+    .home .nav .menu {
+        margin-right: 0px;
+    }
+
+    .home .nav .menu ul {
+        display: flex;
+        align-items: center;
+    }
+
+    .home .nav .menu ul li {
+        margin: 1px 7px;
+        width: 100%;
+        text-align: center;
+        padding: 3px;
+    }
+
+    .home .main {
+        width: 90%;
+        padding: 10px;
+    }
+
+    .home .main .box {
+        width: 100%;
+    }
+
+    .home .main .box .logo2 {
+        width: 100px;
+        height: 50px;
+    }
+
+    .infobox img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .line {
+        font-size: 16px;
+        padding: 5px;
+    }
+
+    .orderinput,
+    .selectlepo {
+        width: 100px;
+    }
+}
+
+/* For medium screens (tablets, up to 768px wide) */
+@media screen and (max-width: 768px) {
+    .home .main {
+        width: 80%;
+        transform: translate(-50%, -40%);
+    }
+
+    .home .main .box {
+        width: 90%;
+    }
+
+    .home .nav .menu ul {
+        justify-content: center;
+    }
+
+    .home .nav .logo {
+        margin-left: 5px;
+    }
+}
+
+/* For large screens (desktops, above 768px wide) */
+@media screen and (min-width: 769px) {
+    .home .main {
+        width: 60%;
+        transform: translate(-50%, -44%);
+    }
+
+    .home .main .box {
+        width: 50%;
+    }
+}
