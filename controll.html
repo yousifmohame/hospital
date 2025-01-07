@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <div class="home">
+        <div class="nav">
+            <div class="logo">
+                <img id="logo1" src="images/logo1.png" alt="">
+                <button id="editLogo1" class="edit-btn">✏️</button>
+                <input type="file" id="logo1Input" style="display: none;" accept="image/*">
+            </div>
+            <div class="menu">
+                <ul>
+                    <li>عنا</li>
+                    <li>حجوزاتي</li>
+                    <li>الأطباء</li>
+                    <li>الرئيسية</li>
+                </ul>
+            </div>
+        </div>
+        <div class="main">
+            <div class="box">
+                <div class="logo2">
+                    <img id="logo2" src="images/logo2.png" alt="">
+                    <button id="editLogo2" class="edit-btn">✏️</button>
+                    <input type="file" id="logo2Input" style="display: none;" accept="image/*">
+                </div>
+                <div class="info"><h2>ما الذي تبحث عنه؟</h2></div>
+                <div id="choises" class="choise">
+                    <!-- Choices will be dynamically added here -->
+                </div>
+                <div class="add-choice">
+                    <input type="text" id="newChoice" placeholder="أضف خيار جديد">
+                    <button id="addChoiceBtn">إضافة</button>
+                </div>
+                <div class="next" id="nextBtn">التالي <p>></p></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="javascript/app.js"></script>
+</body>
+</html>

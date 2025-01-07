@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choice Page</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+
+<body>
+    <div class="home">
+        <div class="nav">
+            <div class="logo">
+                <img id="logo1" src="images/lodo.png" alt="">
+            </div>
+            <div class="menu">
+                <ul>
+                    <li>عنا</li>
+                    <li>حجوزاتي</li>
+                    <li>الأطباء</li>
+                    <li>الرئيسية</li>
+                </ul>
+            </div>
+        </div>
+        <div class="main">
+            <div class="box">
+                <div class="logo2">
+                    <img id="logo2" src="images/logo2.png" alt="">
+
+                </div>
+                <div class="info">
+                    <p>القسم: <span id="departmentName"></span></p>
+                    <p>التخصص: <span id="selectedChoice"></span></p>
+                    <h2>برجاء إختيار</h2>
+
+
+                    <div id="subCollectionData">
+                        <ul id="dataList" class="choise">
+                        </ul>
+                        <div class="next" id="finish">الحجز الأن<p>></p>
+                        </div>
+                    </div>
+                    <div id="userInput" style="display: none;">
+                        <label for="userName">Please enter your name:</label>
+                        <input type="text" id="userName" required>
+                        <button id="confirmReservation">Confirm Reservation</button>
+                    </div>
+                    <div id="waitingInfo" style="display: none;">
+                        <p>رقمك في الانتظار: <span id="waitingNumber"></span></p>
+                        <p>عدد الأشخاص في الانتظار: <span id="queueLength"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="javascript/section.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Page</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <div class="home">
+        <div class="nav">
+            <div class="logo">
+                <img id="logo1" alt="Logo 1">
+            </div>
+            <div class="menu">
+                <ul>
+                    <li>عنا</li>
+                    <li>حجوزاتي</li>
+                    <li>الأطباء</li>
+                    <li>الرئيسية</li>
+                </ul>
+            </div>
+        </div>
+        <div class="main">
+            <div class="box">
+                <div class="logo2">
+                    <img id="logo2" alt="Logo 2">
+                </div>
+                <h1 style="text-align: center;">صفحة الطبيب</h1>
+    <div class="line">
+        <select id="departmentSelect" class="selectlepo"></select>
+        <label for="departmentSelect">:القسم</label>
+    </div>
+    <div class="line">
+        <select id="choiceSelect" class="selectlepo"></select>
+        <label for="choiceSelect">:التخصص</label>
+    </div>
+    <div class="line">
+        <input type="text" id="doctorName" placeholder="إكتب هنا...." class="orderinput">
+        <label for="doctorName">:إسم الطبيب</label>
+    </div>
+    <div class="line">
+        <div>
+            <label for="imageInput" class="custom-file-label">اختر صورة</label>
+            <input type="file" id="imageInput" accept="image/*" style="display: none;">
+            <span id="fileName">لم يتم اختيار أي ملف</span>
+        </div>        
+        <label for="imageInput">:صورة الطبيب</label>
+    </div>
+    <div class="line">
+        <input type="text" id="itemName" placeholder="إكتب هنا...." class="orderinput">
+        <label for="itemName">:الطابق</label>
+    </div>
+    <button id="submitRequestBtn" class="next">إرسال الطلب</button>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="javascript/doctor.js"></script>
+</body>
+</html>

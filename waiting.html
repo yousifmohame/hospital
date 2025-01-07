@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waiting Queue</title>
+    <link rel="stylesheet" href="styles/waitingme.css">
+</head>
+<body>
+    <h1>صفحة الإنتظار</h1>
+
+    <div id="waitingInfo">
+        <p>القسم: <span id="departmentName"></span></p>
+        <p>رقم الانتظار: <span id="waitingNumber"></span></p>
+        <p>عدد الأشخاص أمامك: <span id="queueLength"></span></p>
+        <p>التخصص: <span id="selectedChoice"></span></p>
+        <p>الموعد: <span id="selectedService"></span></p>
+        <div id="orderStatus" class="trackbox"></div>
+    </div>
+
+    <script type="module" src="waiting.js"></script>
+</body>
+</html>
