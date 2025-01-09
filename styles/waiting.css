@@ -66,6 +66,22 @@ h1 {
     direction: rtl;
 }
 
+button {
+    padding: 5px;
+    font-size: 15px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    color: blue;
+    cursor: pointer;
+    margin: 5px;
+}
+
+button:disabled{
+    background-color: #000;
+    color: #000;
+    cursor: none;
+}
+
 .item .itemone{
     display: grid;
 }
@@ -94,6 +110,19 @@ h1 {
 
 .queue-item button.reject:hover {
     background-color: #d32f2f;
+}
+
+div#departmentList {
+    width: 100%;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+
+div#departmentList button {
+    padding: 10px 20px;
+    font-size: 25px;
+    font-weight: 600;
 }
 
 /* Responsive Design */

@@ -5,13 +5,19 @@
     box-sizing: border-box;
 }
 
+body{
+    background-color: #F0F0F0;
+}
+
 .home {
     width: 100%;
-    height: 100vh;
     background-color: #F0F0F0;
-    background-image: url('/images/pixelcut-export.jpeg');
+    background-image: url(/images/pixelcut-export.jpeg);
     background-position: center;
-    background-size: cover;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    min-height: 85vh;
+    position: relative;
 }
 
 .home .nav {
@@ -21,6 +27,9 @@
     justify-content: space-between;
     align-items: center;
     background-color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 10000;
 }
 
 .home .nav .menu {
@@ -33,11 +42,22 @@
     text-align: center;
 }
 
+.home .nav .menu ul a{
+    text-decoration: none;
+    color: #000;
+}
+p#locationInfo {
+    font-size: 18px;
+    color: blue;
+    font-weight: 600;
+}
+
 .home .nav .menu ul li {
     padding: 10px 20px;
     margin: 0px 10px;
     cursor: pointer;
     background-color: transparent;
+    user-select: none;
 }
 
 .home .nav .menu ul li:hover {
@@ -89,21 +109,23 @@
 .home .main {
     width: 700px;
     padding: 20px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    margin: 0px auto; /* Center horizontally */
+    margin-top: 20px;
     border-radius: 20px;
     border: 1px solid #fff;
-    backdrop-filter: blur(5px);
+    background-color: transparent; /* Semi-transparent background */
     display: flex;
+    flex-direction: column; /* Ensure proper stacking of content */
     justify-content: center;
     align-items: center;
+    overflow-y: auto; /* Allow scrolling */
+    position: relative; /* Adjust positioning */
 }
+
 
 .home .main .box {
     width: 400px;
-    background-color: #fff;
+    background-color: transparent;
     border-radius: 20px;
     display: grid;
     justify-content: center;
@@ -134,6 +156,7 @@
     padding: 10px 20px;
     margin: 10px 0px 20px;
     cursor: pointer;
+    position: relative;
 }
 
 .infobox {
@@ -183,16 +206,6 @@
     justify-content: space-between;
     align-items: center;
     margin: 10px;
-    border: 1px solid #000;
-    padding: 5px;
-    border-radius: 10px;
-}
-
-.line {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 10px;
     border: 1px solid #0dcd6d;
     padding: 5px;
     border-radius: 7px;
@@ -214,11 +227,132 @@ span#fileName {
     font-size: 12px;
 }
 
+p#locationInfo {
+    font-size: 18px;
+    color: #3f1313;
+    font-weight: 600;
+    background-color: yellow;
+    padding: 5px;
+    direction: rtl;
+}
+
+/* Add this to your existing styles.css file */
+.contact-box {
+    background-color: #003f3c;
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+    z-index: 10000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 200px;
+}
+
+.contact-box h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.contact-details div {
+    font-size: 18px;
+    color: #555;
+}
+
+.contact-details a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.contact-details a:hover {
+    text-decoration: underline;
+}
+
+.notifi .img1{
+    margin-right: 40px;
+    height: 90px;
+    width: 130px;
+}
+
+.notifi .img1 img{
+    height: 100%;
+    width: 100%;
+}
+
+.soudiarm{
+    display: flex;
+}
+.notifi .img1{
+    margin-right: 40px;
+    height: 90px;
+    width: 130px;
+}
+
+.soudiarm .img2{
+    margin-left: 20px;
+    height: 90px;
+    width: 100px;
+}
+
+.soudiarm .img2 img{
+    height: 100%;
+    width: 100%;
+}
+
+.remove-link {
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    position: absolute;
+    right: 5px;
+}
+
+
 /* For small screens (phones, up to 600px wide) */
 @media screen and (max-width: 600px) {
+    .home {
+        background-image: url(/images/phone.png);
+    }
+    
     .home .nav .logo {
         margin-left: 5px;
         width: 60px;
+    }
+
+    .contact-box {
+        padding: 5px;
+        height: 130px;
+    }
+    .contact-box h3 {
+        font-size: 18px;
+        margin-bottom: 0px;
+    }
+
+    .contact-details div {
+        font-size: 17px;
+        color: #a2cbc5;
+        display: grid
+    ;
+    }
+
+    .notifi .img1{
+        margin-right: 5px;
+        height: 45px;
+        width: 75px;
+    }
+    
+    .soudiarm .img2{
+        margin-left: 5px;
+        height: 45px;
+        width: 45px;
     }
 
     .home .main .box .choise .one {
@@ -262,6 +396,7 @@ span#fileName {
 
     .home .main .box {
         width: 100%;
+        justify-content: right;
     }
 
     .home .main .box .logo2 {
@@ -287,13 +422,16 @@ span#fileName {
 
 /* For medium screens (tablets, up to 768px wide) */
 @media screen and (max-width: 768px) {
+    .home {
+        background-image: url(/images/phone.png);
+    }
     .home .main {
         width: 80%;
-        transform: translate(-50%, -40%);
     }
 
     .home .main .box {
         width: 90%;
+        justify-content: right;
     }
 
     .home .nav .menu ul {
@@ -305,14 +443,4 @@ span#fileName {
     }
 }
 
-/* For large screens (desktops, above 768px wide) */
-@media screen and (min-width: 769px) {
-    .home .main {
-        width: 60%;
-        transform: translate(-50%, -44%);
-    }
 
-    .home .main .box {
-        width: 50%;
-    }
-}
