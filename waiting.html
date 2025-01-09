@@ -10,11 +10,16 @@
     <h1>صفحة الإنتظار</h1>
 
     <div id="waitingInfo">
-        <p>القسم: <span id="departmentName"></span></p>
-        <p>رقم الانتظار: <span id="waitingNumber"></span></p>
-        <p>عدد الأشخاص أمامك: <span id="queueLength"></span></p>
-        <p>التخصص: <span id="selectedChoice"></span></p>
-        <p>الموعد: <span id="selectedService"></span></p>
+        <p style="display: none;">القسم: <span id="departmentName"></span></p>
+        <div class="town">
+            <p>رقمي</p>
+            <p id="waitingNumber"></p>
+        </div>
+        <div class="colw">
+            <p>عدد الأشخاص أمامك: <span id="queueLength"></span></p>
+        </div>
+        <p style="display: none;">التخصص: <span id="selectedChoice"></span></p>
+        <p style="display: none;">الموعد: <span id="selectedService"></span></p>
         <div id="orderStatus" class="trackbox"></div>
     </div>
 

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Choice Control</title>
+    <title>Choice Page</title>
     <link rel="stylesheet" href="styles/style.css">
 </head>
+
 <body>
     <div class="home">
         <div class="nav">
@@ -14,7 +16,7 @@
             </div>
             <div class="menu">
                 <ul>
-                    <a href="servises.html"><li>الخدمات</li></a>
+                    <a href="waitingcontroll.html"><li>الإستقبال</li></a>
                     <a href="index.html"><li>الرئيسية</li></a>
                 </ul>
             </div>
@@ -26,8 +28,29 @@
                 </div>
                 <div class="info">
                     <p style="text-align: center;">القسم: <span id="departmentName"></span></p>
-                    <div id="choises" class="choise">
+                    <p style="text-align: center;">التخصص: <span id="selectedChoice"></span></p>
+                    <h2>برجاء إختيار موعد</h2>
+
+                    <div id="serviceSelection">
+                        <div id="dataList" class="choise"></div>
+                        <div id="formContainer">
+                            <input type="text" id="newItemInput" placeholder="Enter service name">
+                            <button id="addItemBtn">Add Service</button>
                         </div>
+                        <button id="nextBtn" class="next" disabled>التالي</button>
+                    </div>
+
+                    <div id="locationInfoBox" style="display: none;">
+                        <h3>Location Information:</h3>
+                        <textarea id="locationInfo" placeholder="Enter location information here"></textarea>
+                        <button id="updateLocationBtn">Update Location</button>
+                        <button id="finishBtn" class="next">إدارة الحجوزات</button>
+                    </div>
+
+                    <div id="waitingInfo" style="display: none;">
+                        <p>رقمك في الانتظار: <span id="waitingNumber"></span></p>
+                        <p>عدد الأشخاص في الانتظار: <span id="queueLength"></span></p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -54,6 +77,7 @@
         </div>
     </div>
 
-    <script type="module" src="javascript/choise.js"></script>
+    <script type="module" src="javascript/section.js"></script>
 </body>
+
 </html>

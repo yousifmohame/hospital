@@ -16,10 +16,12 @@
             </div>
             <div class="menu">
                 <ul>
-                    <li>عنا</li>
-                    <li>حجوزاتي</li>
-                    <li>الأطباء</li>
-                    <li>الرئيسية</li>
+                    <a href="servises.html">
+                        <li>الخدمات</li>
+                    </a>
+                    <a href="index.html">
+                        <li>الرئيسية</li>
+                    </a>
                 </ul>
             </div>
         </div>
@@ -31,21 +33,15 @@
                 <div class="info">
                     <p style="text-align: center;">القسم: <span id="departmentName"></span></p>
                     <p style="text-align: center;">التخصص: <span id="selectedChoice"></span></p>
-                    <h2>برجاء إختيار موعد</h2>
 
                     <div id="serviceSelection">
                         <div id="dataList" class="choise"></div>
-                        <div id="formContainer">
-                            <input type="text" id="newItemInput" placeholder="Enter service name">
-                            <button id="addItemBtn">Add Service</button>
-                        </div>
-                        <button id="nextBtn" class="next" disabled>التالي</button>
+                        <!-- <button id="nextBtn" class="next" disabled>التالي</button> -->
                     </div>
 
                     <div id="locationInfoBox" style="display: none;">
-                        <h3>Location Information:</h3>
-                        <textarea id="locationInfo" placeholder="Enter location information here"></textarea>
-                        <button id="updateLocationBtn">Update Location</button>
+                        <h4 style="text-align: center;">معلومات الموقع</h4>
+                        <p id="locationInfo"></p>
                         <button id="finishBtn" class="next">الحجز الأن</button>
                     </div>
 
@@ -56,9 +52,31 @@
                 </div>
             </div>
         </div>
+
+    </div>
+    <div class="contact-box">
+        <div class="soudiarm">
+            <div class="img2">
+                <img src="/images/minstry.png" alt="">
+            </div>
+            <div class="img2">
+                <img src="/images/SAUDI_ARMED.png" alt="">
+            </div>
+        </div>
+        <div class="contact-details">
+            <h3>حجز مواعيد</h3>
+            <div class="phone">
+                <strong>رقم الهاتف:</strong> <a href="tel:+9660114758000">0114758000</a>
+            </div>
+        </div>
+        <div class="notifi">
+            <div class="img1">
+                <img src="/images/vision-2030-logo.png" alt="">
+            </div>
+        </div>
     </div>
 
-    <script type="module" src="javascript/section.js"></script>
+    <script type="module" src="javascript/sectionmain.js"></script>
 </body>
 
 </html>

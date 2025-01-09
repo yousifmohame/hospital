@@ -1,5 +1,6 @@
+// Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
-import { getFirestore, doc, onSnapshot, runTransaction, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, onSnapshot, runTransaction, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-messaging.js";
 
 // Firebase configuration
@@ -22,12 +23,11 @@ const urlParams = new URLSearchParams(window.location.search);
 const departmentId = urlParams.get('departmentId');
 const waitingNumber = parseInt(urlParams.get('waitingNumber'));
 
-
+// Request Notification Permission
 function requestNotificationPermission() {
     Notification.requestPermission().then(function (permission) {
         if (permission === 'granted') {
             console.log('Notification permission granted.');
-            // You can now send notifications or get the FCM token
         } else {
             console.log('Notification permission denied.');
         }
@@ -37,8 +37,7 @@ function requestNotificationPermission() {
 // Call this function before trying to send a notification
 requestNotificationPermission();
 
-
-// Request Notification Permission and Get Token
+// Register Service Worker and Get FCM Token
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js')
         .then(registration => {
@@ -62,15 +61,18 @@ if ('serviceWorker' in navigator) {
         });
 }
 
+// Get FCM Token
 function getFCMToken(registration) {
     getToken(messaging, {
         serviceWorkerRegistration: registration,
-        vapidKey: 'BGJ0QdsqsvAJyWLn3b8Ehfk2RT69dgNLKkzxGNc-Oj-Y5O8-JdWklLkCVabH-4_yWeiA0lpdnAolPrUaozIyzUs'
+        vapidKey: 'BHVjbcSzFCOBM09yA4Rh70z_s41-HCrNDzaC1NfkF9bLGvvdPAHd4tGFOAff_dpKI2H93GriDodpW_9g1xxPaM8'
     })
         .then(currentToken => {
             if (currentToken) {
                 console.log('FCM Token:', currentToken);
                 localStorage.setItem('fcmToken', currentToken);
+                // Save the token to your backend (e.g., Firestore)
+                saveTokenToBackend(currentToken);
             } else {
                 console.log('Failed to get FCM token.');
             }
@@ -80,10 +82,17 @@ function getFCMToken(registration) {
         });
 }
 
-// Listen for foreground messages
+// Save FCM Token to Backend (Firestore)
+async function saveTokenToBackend(token) {
+    const userId = "USER_ID"; // Replace with the actual user ID
+    const tokenRef = doc(db, "fcmTokens", userId);
+    await setDoc(tokenRef, { token: token }, { merge: true });
+    console.log("FCM token saved to backend.");
+}
+
+// Listen for Foreground Messages
 onMessage(messaging, (payload) => {
     console.log('Message received. ', payload);
-    // Customize the notification appearance
     const notificationTitle = payload.notification.title;
     const notificationOptions = {
         body: payload.notification.body,
@@ -99,40 +108,47 @@ onMessage(messaging, (payload) => {
         });
 });
 
-// Function to start listening for order status changes
+// Function to Start Listening for Order Status Changes
 function startOrderStatusListener(userId, waitingNumber, departmentId, selectedChoice) {
     const ordersRef = collection(db, "orders");
     const q = query(ordersRef,
-        where("userId", "==", userId),
         where("waitingNumber", "==", waitingNumber),
         where("departmentId", "==", departmentId),
         where("selectedChoice", "==", selectedChoice)
     );
 
-    onSnapshot(q, (querySnapshot) => {
-        querySnapshot.docChanges().forEach((change) => {
-            if (change.type === "modified") {
-                const order = change.doc.data();
-                if (order && order.status) {
-                    const status = order.status;
-                    console.log("Order Status Changed:", status);
+    // Use a flag to track if the listener is already set up
+    if (!window.orderStatusListenerActive) {
+        window.orderStatusListenerActive = true;
 
-                    // Trigger local notification when order status changes
-                    if (Notification.permission === "granted") {
-                        new Notification("Order Status Updated", {
-                            body: `تم تحديث حالة الطلب الي: ${status}`,
-                            icon: 'https://firebasestorage.googleapis.com/v0/b/filmy-6bd1a.appspot.com/o/logos%2Flogo2.png?alt=media&token=85c04fe3-40dc-46df-8b01-9df78d6d2c1e', // Replace with your icon URL
-                        });
-                    } else {
-                        console.log("Notification permission not granted.");
+        onSnapshot(q, (querySnapshot) => {
+            querySnapshot.docChanges().forEach((change) => {
+                if (change.type === "modified") {
+                    const order = change.doc.data();
+                    if (order && order.status) {
+                        const status = order.status;
+                        console.log("Order Status Changed:", status);
+
+                        // Trigger local notification when order status changes
+                        if (Notification.permission === "granted") {
+                            new Notification("Order Status Updated", {
+                                body: `تم تحديث حالة الطلب الي: ${status}`,
+                                icon: 'https://firebasestorage.googleapis.com/v0/b/filmy-6bd1a.appspot.com/o/logos%2Flogo2.png?alt=media&token=85c04fe3-40dc-46df-8b01-9df78d6d2c1e',
+                            });
+                        } else {
+                            console.log("Notification permission not granted.");
+                        }
+
+                        // Re-render the order status levels with the updated status
+                        renderOrderStatus(userId, waitingNumber, departmentId, selectedChoice);
                     }
                 }
-            }
+            });
         });
-    });
+    }
 }
 
-// Function to display waiting information
+// Function to Display Waiting Information
 async function displayWaitingInfo(queueData) {
     if (!queueData || !queueData.queue) return;
 
@@ -163,7 +179,7 @@ async function displayWaitingInfo(queueData) {
     waitingInfo.style.display = 'block';
 }
 
-// Function to get the order status from Firestore
+// Function to Get Order Status from Firestore
 async function getOrderStatus(userId, waitingNumber, departmentId, selectedChoice) {
     const ordersRef = collection(db, "orders");
     const q = query(ordersRef,
@@ -183,8 +199,8 @@ async function getOrderStatus(userId, waitingNumber, departmentId, selectedChoic
     }
 }
 
-// Function to render the order status levels
-function renderOrderStatus(currentStatus) {
+// Function to Render Order Status Levels
+async function renderOrderStatus(userId, waitingNumber, departmentId, selectedChoice) {
     const orderStatusEl = document.getElementById('orderStatus');
     orderStatusEl.innerHTML = ''; // Clear previous status
 
@@ -196,18 +212,22 @@ function renderOrderStatus(currentStatus) {
         "انتهاء الخدمة",
     ];
 
+    // Fetch the current status from Firestore
+    const currentStatus = await getOrderStatus(userId, waitingNumber, departmentId, selectedChoice);
+
+    // Render each status level
     statusLevels.forEach((level) => {
         const levelDiv = document.createElement('div');
         levelDiv.className = 'level';
         if (level === currentStatus) {
-            levelDiv.classList.add('active');
+            levelDiv.classList.add('active'); // Add 'active' class to the current status
         }
         levelDiv.textContent = level;
         orderStatusEl.appendChild(levelDiv);
     });
 }
 
-// Function to handle finished orders
+// Function to Handle Finished Orders
 async function handleFinishedOrder(departmentId, waitingNumber) {
     try {
         const result = await runTransaction(db, async (transaction) => {
@@ -242,13 +262,12 @@ async function handleFinishedOrder(departmentId, waitingNumber) {
 
     } catch (error) {
         console.error("Error handling finished order:", error);
-        // Implement retry logic or alert the user about the error
     }
 }
 
+// Listen for Queue Updates
 const queueRef = doc(db, "queue", departmentId);
 
-// Get initial queue data and set up listeners
 try {
     onSnapshot(queueRef, async (doc) => {
         if (!doc.exists()) {
@@ -276,7 +295,9 @@ try {
 
         // Fetch initial order status
         const initialOrderStatus = await getOrderStatus(userData.userId, waitingNumber, departmentId, userData.selectedChoice);
-        renderOrderStatus(initialOrderStatus);
+
+        // Render the order status levels with the active status highlighted
+        await renderOrderStatus(userData.userId, waitingNumber, departmentId, userData.selectedChoice);
 
         // Start listening for order status changes
         startOrderStatusListener(userData.userId, waitingNumber, departmentId, userData.selectedChoice);
@@ -289,5 +310,3 @@ try {
 } catch (error) {
     console.error("Error in onSnapshot listener:", error);
 }
-
-

@@ -1,45 +1,23 @@
-self.addEventListener("push", (event) => {
-    console.log("Push event received:", event);
-    const notif = event.data ? event.data.json().notification : {};
-    const title = notif.title || "Default Title";
-    const body = notif.body || "Default Body";
-    const icon = notif.image || "/default-icon.png";
-    const clickAction = notif.click_action || "/";
+self.addEventListener('push', event => {
+    console.log('Push event received:', event);
 
-    console.log("Notification payload:", notif);
+    if (event.data) {
+        const data = event.data.json(); // Parse the incoming JSON data
+        console.log('Push data:', data);
 
-    event.waitUntil(
-        self.registration.showNotification(title, {
-            body: body,
-            icon: icon,
+        const title = data.notification?.title || 'Default Title';
+        const options = {
+            body: data.notification?.body || 'Default Body',
+            icon: data.notification?.icon || '/default-icon.png',
             data: {
-                url: clickAction,
-            },
-        })
-    );
-});
+                click_action: data.notification?.click_action || '/'
+            }
+        };
 
-self.addEventListener("notificationclick", (event) => {
-    console.log("Notification clicked:", event);
-    event.notification.close(); // Close the notification
-
-    const targetUrl = event.notification.data ? event.notification.data.url : null;
-
-    if (!targetUrl) {
-        console.warn("No URL found in notification data.");
-        return;
+        event.waitUntil(
+            self.registration.showNotification(title, options)
+        );
+    } else {
+        console.error('No data received in push event.');
     }
-
-    event.waitUntil(
-        clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
-            for (const client of clientList) {
-                if (client.url === targetUrl && "focus" in client) {
-                    return client.focus();
-                }
-            }
-            if (clients.openWindow) {
-                return clients.openWindow(targetUrl);
-            }
-        })
-    );
 });
