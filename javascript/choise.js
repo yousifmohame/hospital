@@ -26,7 +26,6 @@ document.getElementById('departmentName').textContent = departmentName;
 let selectedChoice = null;
 let selectedChoiceId = null; // To store the ID of the selected choice
 
-// Function to load items from the selected department's sub-collection
 async function loadSubCollectionData() {
     const choicesContainer = document.getElementById("choises");
     choicesContainer.innerHTML = ""; // Clear existing choices
@@ -35,6 +34,16 @@ async function loadSubCollectionData() {
     const subCollectionRef = collection(db, "department", departmentId, departmentName);
 
     try {
+        const logosSnapshot = await getDocs(collection(db, "logos"));
+        logosSnapshot.forEach(doc => {
+            const logoData = doc.data();
+            if (logoData.name === "logo1") {
+                document.getElementById("logo1").src = logoData.url;
+            } else if (logoData.name === "logo2") {
+                document.getElementById("logo2").src = logoData.url;
+            }
+        });
+
         const querySnapshot = await getDocs(subCollectionRef);
         querySnapshot.forEach((doc) => {
             const itemData = doc.data();
@@ -43,14 +52,9 @@ async function loadSubCollectionData() {
             div.textContent = itemData.itemName; // Display the item name
 
             div.addEventListener('click', () => {
-                // Highlight the selected choice
-                const choices = document.querySelectorAll('.choise .one');
-                choices.forEach(c => c.style.backgroundColor = ''); // Reset background color
-                div.style.backgroundColor = '#D3D3D3'; // Highlight selected choice
-
-                // Update selected choice name and ID
-                selectedChoice = itemData.itemName;
-                selectedChoiceId = doc.id; // Store the document ID of the selected item
+                // Redirect to the desired page
+                const url = `section.html?departmentName=${encodeURIComponent(departmentName)}&departmentId=${departmentId}&selectedChoice=${encodeURIComponent(itemData.itemName)}`;
+                window.location.href = url;
             });
 
             choicesContainer.appendChild(div);
@@ -61,16 +65,4 @@ async function loadSubCollectionData() {
     }
 }
 
-// Load data on page load
 loadSubCollectionData();
-
-// Event listener for "Next" button
-document.getElementById('nextBtn').addEventListener('click', () => {
-    if (selectedChoice && selectedChoiceId) {
-        // Encode the selected choice name and ID in the URL
-        const url = `section.html?departmentName=${encodeURIComponent(departmentName)}&departmentId=${departmentId}&selectedChoice=${encodeURIComponent(selectedChoice)}`;
-        window.location.href = url;
-    } else {
-        alert('Please select an item before proceeding.');
-    }
-});

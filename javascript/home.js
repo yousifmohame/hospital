@@ -41,14 +41,9 @@ async function loadData() {
       div.textContent = choiceData.name;
       div.setAttribute('data-department-id', doc.id); // Set the department ID
       div.addEventListener('click', () => {
-        // Highlight the selected choice
-        const choices = document.querySelectorAll('.choise .one');
-        choices.forEach(c => c.style.backgroundColor = ''); // Reset background color
-        div.style.backgroundColor = '#D3D3D3'; // Highlight selected choice
-
-        // Update selected choice name and ID
-        selectedChoice = choiceData.name;
-        selectedChoiceId = doc.id;
+        // Redirect to the desired page
+        const url = `choise.html?choice=${encodeURIComponent(choiceData.name)}&departmentId=${doc.id}`;
+        window.location.href = url;
       });
       choisesContainer.appendChild(div);
     });
@@ -57,15 +52,6 @@ async function loadData() {
     alert("Error loading data. See console for details.");
   }
 }
-
-document.getElementById('nextBtn').addEventListener('click', () => {
-  if (selectedChoice && selectedChoiceId) {
-    const url = `choise.html?choice=${encodeURIComponent(selectedChoice)}&departmentId=${selectedChoiceId}`;
-    window.location.href = url;
-  } else {
-    alert('Please select a choice before proceeding.');
-  }
-});
 
 // Load data on page load
 document.addEventListener("DOMContentLoaded", loadData);

@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-storage.js";
 
 // Firebase configuration
@@ -22,27 +22,51 @@ let selectedChoice = null; // Variable to store the currently selected choice
 // Function to load data from Firestore
 async function loadData() {
     try {
-        // Fetch logos
+
         const logosSnapshot = await getDocs(collection(db, "logos"));
         logosSnapshot.forEach(doc => {
             const logoData = doc.data();
             if (logoData.name === "logo1") {
-                document.getElementById('logo1').src = logoData.url;
+                document.getElementById("logo1").src = logoData.url;
             } else if (logoData.name === "logo2") {
-                document.getElementById('logo2').src = logoData.url;
+                document.getElementById("logo2").src = logoData.url;
             }
         });
-
         // Fetch choices (departments)
         const choicesSnapshot = await getDocs(collection(db, "department"));
         const choisesContainer = document.getElementById('choises');
         choisesContainer.innerHTML = '';
         choicesSnapshot.forEach(doc => {
             const choiceData = doc.data();
+
+            // Create the main div for the choice
             const div = document.createElement('div');
             div.className = 'one';
-            div.textContent = choiceData.name;
             div.setAttribute('data-department-id', doc.id); // Store department ID
+
+            // Create a span to hold the department name
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = choiceData.name; // Only the name of the department
+            nameSpan.className = 'department-name';
+
+            // Create a remove link
+            const removeLink = document.createElement('a');
+            removeLink.className = 'remove-link';
+            removeLink.href = '#'; // Placeholder link
+            removeLink.textContent = '❌'; // Text for the link
+            removeLink.style.color = 'red'; // Optional: Make it visually distinct
+            removeLink.style.marginLeft = '10px'; // Spacing from choice text
+            removeLink.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent page reload
+                event.stopPropagation(); // Prevent triggering the click on the div
+                removeChoice(doc.id, div); // Call function to remove the choice
+            });
+
+            // Append the name and remove link to the div
+            div.appendChild(nameSpan);
+            div.appendChild(removeLink);
+
+            // Append the div to the container
             choisesContainer.appendChild(div);
         });
 
@@ -51,6 +75,23 @@ async function loadData() {
         console.error('Error loading data:', error);
     }
 }
+
+async function removeChoice(departmentId, divElement) {
+    try {
+        // Delete department from Firestore
+        const departmentRef = doc(db, "department", departmentId);
+        await deleteDoc(departmentRef);
+
+        // Remove the department div from the UI
+        divElement.remove();
+
+        alert('Department removed successfully!');
+    } catch (error) {
+        console.error('Error removing department:', error);
+        alert('Error removing department');
+    }
+}
+
 
 // Upload new logo to Firebase Storage and Firestore
 async function uploadLogo(inputId, logoName) {
@@ -111,11 +152,18 @@ function enableChoiceSelection() {
     const choices = document.querySelectorAll('.choise .one');
     choices.forEach(choice => {
         choice.addEventListener('click', () => {
-            choices.forEach(c => c.style.backgroundColor = ''); // Reset background color
-            choice.style.backgroundColor = '#D3D3D3'; // Highlight selected choice
-            selectedChoice = choice.textContent; // Store selected choice (name)
+            // Reset background color for all choices
+            choices.forEach(c => c.style.backgroundColor = '');
+
+            // Highlight selected choice
+            choice.style.backgroundColor = '#D3D3D3';
+
+            // Get the department name from the span element
+            const nameSpan = choice.querySelector('.department-name');
+            selectedChoice = nameSpan.textContent.trim(); // Store selected choice (name)
+
             // Store selected department ID as well:
-            selectedChoiceId = choice.getAttribute('data-department-id'); 
+            selectedChoiceId = choice.getAttribute('data-department-id');
         });
     });
 }

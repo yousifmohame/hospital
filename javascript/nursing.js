@@ -1,6 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
 import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-storage.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -15,19 +14,20 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app);
 
 // DOM Elements
 const departmentSelect = document.getElementById('departmentSelect');
 const doctorNameInput = document.getElementById('doctorName');
-const doorNumInput = document.getElementById('doornum');
 const floorInput = document.getElementById('itemName');
 const genderSelect = document.getElementById('genderSelect');
 const submitRequestBtn = document.getElementById('submitRequestBtn');
 
-// Function to populate the department dropdown
+// Function to populate the department dropdown (if needed)
 async function populateDepartmentSelect() {
     try {
+        const departmentsRef = collection(db, "departments");
+        const querySnapshot = await getDocs(departmentsRef);
+
         const logosSnapshot = await getDocs(collection(db, "logos"));
         logosSnapshot.forEach(doc => {
             const logoData = doc.data();
@@ -37,9 +37,6 @@ async function populateDepartmentSelect() {
                 document.getElementById("logo2").src = logoData.url;
             }
         });
-        
-        const departmentsRef = collection(db, "departments");
-        const querySnapshot = await getDocs(departmentsRef);
 
         querySnapshot.forEach((doc) => {
             const department = doc.data();
@@ -58,12 +55,11 @@ async function submitRequest() {
     const departmentId = departmentSelect.value;
     const departmentName = departmentSelect.options[departmentSelect.selectedIndex].text;
     const doctorName = doctorNameInput.value;
-    const doorNum = doorNumInput.value;
     const floor = floorInput.value;
     const gender = genderSelect.value;
 
     // Validate inputs
-    if (!departmentId || !doctorName || !doorNum || !floor || !gender) {
+    if (!departmentId || !doctorName || !floor || !gender) {
         alert("Please fill all fields.");
         return;
     }
@@ -73,24 +69,22 @@ async function submitRequest() {
         departmentId,
         departmentName,
         doctorName,
-        doorNum,
         floor,
         gender,
         status: "pending" // Initial status of the request
     };
 
     try {
-        // Add request to the "doctors" collection in Firestore
-        const doctorsRef = collection(db, "doctors");
-        await addDoc(doctorsRef, requestData);
+        // Add request to the "nursingRequests" collection in Firestore
+        const nursingRequestsRef = collection(db, "nursingRequests");
+        await addDoc(nursingRequestsRef, requestData);
 
         console.log("Request submitted successfully!");
         alert("Your request has been submitted for review.");
 
         // Clear the form
-        departmentSelect.value = "";
+        departmentSelect.value = "generalAppointments"; // Reset to default
         doctorNameInput.value = "";
-        doorNumInput.value = "";
         floorInput.value = "";
         genderSelect.value = "male"; // Reset to default
     } catch (error) {

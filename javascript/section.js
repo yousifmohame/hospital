@@ -78,6 +78,15 @@ async function loadServices() {
     const collectionRef = collection(db, "services", departmentId, selectedChoice);
 
     try {
+        const logosSnapshot = await getDocs(collection(db, "logos"));
+        logosSnapshot.forEach(doc => {
+            const logoData = doc.data();
+            if (logoData.name === "logo1") {
+                document.getElementById("logo1").src = logoData.url;
+            } else if (logoData.name === "logo2") {
+                document.getElementById("logo2").src = logoData.url;
+            }
+        });
         const querySnapshot = await getDocs(collectionRef);
         querySnapshot.forEach((doc) => {
             const data = doc.data();
@@ -121,6 +130,7 @@ async function updateQueueLengthDisplay(departmentId) {
 }
 
 // Function to handle the "Next" action
+// Function to handle the "Next" action
 async function handleNext() {
     if (!selectedService) {
         alert("Please select a service.");
@@ -132,7 +142,7 @@ async function handleNext() {
     document.getElementById("locationInfoBox").style.display = "block";
 
     // Load existing location information if available
-    const locationInfoRef = doc(db, "locationInfo", departmentId);
+    const locationInfoRef = doc(db, "locationInfo", departmentId, "choices", selectedChoice);
     const locationInfoSnap = await getDoc(locationInfoRef);
     if (locationInfoSnap.exists()) {
         document.getElementById("locationInfo").value = locationInfoSnap.data().info;
@@ -142,7 +152,7 @@ async function handleNext() {
 // Function to handle the "Update Location" action
 async function handleUpdateLocation() {
     const locationInfo = document.getElementById("locationInfo").value;
-    const locationInfoRef = doc(db, "locationInfo", departmentId);
+    const locationInfoRef = doc(db, "locationInfo", departmentId, "choices", selectedChoice);
 
     try {
         await setDoc(locationInfoRef, { info: locationInfo });
@@ -153,131 +163,10 @@ async function handleUpdateLocation() {
     }
 }
 
-// Function to get the next waiting number
-async function getNextWaitingNumber(departmentId) {
-    const waitingNumbersRef = collection(db, "waitingNumbers");
-    const lastNumberQuery = query(waitingNumbersRef, orderBy("number", "desc"), limit(1));
-
-    try {
-        const lastNumberSnap = await getDocs(lastNumberQuery);
-        let nextNumber = 1; // Default to 1 if no number exists
-
-        if (!lastNumberSnap.empty) {
-            const lastNumberDoc = lastNumberSnap.docs[0];
-            nextNumber = lastNumberDoc.data().number + 1;
-        }
-
-        // Add the new number to the 'waitingNumbers' collection
-        await addDoc(waitingNumbersRef, {
-            number: nextNumber,
-            timestamp: new Date(), // Add timestamp for reference
-        });
-
-        return nextNumber;
-    } catch (error) {
-        console.error("Error getting next waiting number:", error);
-        throw error; // Re-throw the error to be handled by the caller
-    }
-}
-
+// Function to confirm reservation
 async function confirmReservation() {
-    try {
-        // Get the next waiting number
-        const waitingNumber = await getNextWaitingNumber();
-
-        // Use a transaction to ensure atomic updates
-        const currentQueue = await runTransaction(db, async (transaction) => {
-            const queueRef = doc(db, "queue", departmentId);
-            const queueSnap = await transaction.get(queueRef);
-            let currentQueue = [];
-
-            if (queueSnap.exists()) {
-                currentQueue = queueSnap.data().queue || [];
-            }
-
-            // Add the user's reservation to the queue with a placeholder for userName
-            currentQueue.push({
-                userId: "placeholder", // Placeholder for user ID
-                departmentId: departmentId,
-                departmentName: departmentName,
-                selectedChoice: selectedChoice,
-                selectedItem: selectedService,
-                waitingNumber: waitingNumber,
-                status: "تم البدأ",
-            });
-
-            // Update the queue in Firestore
-            transaction.set(queueRef, { queue: currentQueue });
-
-            // Return currentQueue to use it after the transaction completes
-            return currentQueue;
-        });
-
-        // Prompt for the user's name after the transaction is completed
-        const userName = prompt("برجاء إدخال إسمك");
-        if (!userName) {
-            alert("Reservation process incomplete. Name is required.");
-            return;
-        }
-
-        // Update the placeholder with the actual user name
-        const queueRef = doc(db, "queue", departmentId);
-        const queueSnap = await getDoc(queueRef);
-        if (queueSnap.exists()) {
-            let updatedQueue = queueSnap.data().queue || [];
-            const userIndex = updatedQueue.findIndex(item => item.waitingNumber === waitingNumber);
-            if (userIndex !== -1) {
-                updatedQueue[userIndex].userId = userName; // Update the placeholder with the actual user name
-                await updateDoc(queueRef, { queue: updatedQueue });
-            }
-        }
-
-        // Add a new document to the 'waiting' collection
-        const waitingRef = collection(db, "waiting");
-        await addDoc(waitingRef, {
-            numberInWaiting: waitingNumber,
-            name: userName,
-            departmentName: departmentName,
-            departmentId: departmentId,
-            selectedChoice: selectedChoice,
-            peopleInWaiting: currentQueue.length, // Update the count of people in waiting
-        });
-
-        // Create order data
-        const orderData = {
-            userId: userName,
-            departmentId: departmentId,
-            departmentName: departmentName,
-            selectedChoice: selectedChoice,
-            selectedService: selectedService.data.serviceName,
-            waitingNumber: waitingNumber,
-            status: "تم البدأ",
-            createdAt: new Date()
-        };
-
-        // Add the order to the 'orders' collection
-        const ordersRef = collection(db, "orders");
-        await addDoc(ordersRef, orderData);
-
-        console.log("Order added to 'orders' collection successfully!");
-
-        // Show waiting information
-        document.getElementById('locationInfoBox').style.display = 'none';
-        document.getElementById('waitingInfo').style.display = 'block';
-
-        // Update the waiting information on the page
-        document.getElementById('waitingNumber').textContent = waitingNumber;
-        document.getElementById('queueLength').textContent = currentQueue.length;
-
-        // Redirect to the waiting page with necessary data
-        window.location.href = `waiting.html?departmentId=${departmentId}&waitingNumber=${waitingNumber}`;
-    } catch (error) {
-        console.error("Error during transaction:", error);
-        alert("An error occurred while processing your reservation. Please try again.");
-    }
+    window.location.href = `waitingcontroll.html`;
 }
-
-
 
 // Load services on page load
 loadServices();
